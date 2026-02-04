@@ -68,8 +68,8 @@ const hitMessages = [
   "Acha bas aik aur",
   "Nakhray na karo. Hit it again 😾",
   "Acha aik aur....",
+  "C'mom aik aurrrrrr",
   "PROMISE YE LAST HAI 🥹",
-  "Ho gayaaaaaa!!!",
 ]
 
 const messageColors = [
@@ -149,21 +149,8 @@ export default function BirthdayWish() {
     setHits(newHits)
     setCurrentMessage(hitMessages[Math.min(newHits - 1, hitMessages.length - 1)])
     // Choose from safe zones (left, right, or bottom areas)
-// Choose from safe zones with weighted probability (favor bottom)
-const safeZones = [
-  // Left side
-  { x: Math.random() * 25 + 10, y: Math.random() * 50 + 10 },
-  // Right side
-  { x: Math.random() * 25 + 65, y: Math.random() * 50 + 10 },
-  // Bottom center (below pendulum)
-  { x: Math.random() * 40 + 30, y: Math.random() * 20 + 65 },
-  // Bottom left (more weight)
-  { x: Math.random() * 30 + 10, y: Math.random() * 20 + 65 },
-  // Bottom right (more weight)
-  { x: Math.random() * 30 + 60, y: Math.random() * 20 + 65 },
-]
-
-setMessagePosition(safeZones[Math.floor(Math.random() * safeZones.length)])
+// Fixed position: bottom center (no random - not needed anymore)
+setMessagePosition({ x: 50, y: 85 })
 
 setMessageColor(Math.floor(Math.random() * messageColors.length))
 
@@ -761,51 +748,49 @@ for (let i = 0; i < 1000; i++) {
 {!showShower && (
 <motion.div
   key={currentMessage}
-  initial={{ opacity: 0, scale: 0.5 }}
-  animate={{ opacity: 1, scale: 1 }}
-  exit={{ opacity: 0, scale: 0.5 }}
+  initial={{ opacity: 0, y: 10 }}
+  animate={{ opacity: 1, y: 0 }}
+  exit={{ opacity: 0, y: 10 }}
   transition={{ duration: 0.4 }}
-  className="absolute z-30 pointer-events-none"
-  style={{
-    left: `${messagePosition.x}%`,
-    top: `${messagePosition.y}%`,
-    transform: 'translate(-50%, -50%)'
-  }}
+  className="fixed bottom-8 left-0 right-0 z-30 pointer-events-none flex justify-center px-4"
 >
-  <div className={`backdrop-blur-sm bg-gradient-to-br ${messageColors[messageColor]} rounded-xl p-4 shadow-2xl max-w-xs border`}>
+  <div className={`backdrop-blur-sm bg-gradient-to-br ${messageColors[messageColor]} rounded-xl p-4 shadow-2xl max-w-sm border`}>
     <p className="text-sm text-white font-medium text-center">
       {currentMessage}
     </p>
   </div>
 </motion.div>
+
 )}
 
 
             <AnimatePresence>
               {confetti.map((item) => (
   <motion.div
-    key={item.id}
-    className="absolute pointer-events-none z-50"
-    initial={{ 
-      x: `${item.x}vw`, 
-      y: `${item.y}vh`, 
-      opacity: 1, 
-      scale: item.scale,
-      rotate: 0 
-    }}
-    animate={{
-      x: `${item.x}vw`,
-      y: "120vh",
-      rotate: item.rotation,
-      opacity: [1, 1, 1, 0.8, 0]
-    }}
-    exit={{ opacity: 0 }}
-    transition={{
-      duration: 5,
-      delay: item.delay,
-      ease: "linear"
-    }}
-  >
+  key={item.id}
+  className="fixed pointer-events-none z-50"
+  style={{
+    left: `${item.x}%`,
+  }}
+  initial={{ 
+    y: `${item.y}vh`, 
+    opacity: 1, 
+    scale: item.scale,
+    rotate: 0 
+  }}
+  animate={{
+    y: "120vh",
+    rotate: item.rotation,
+    opacity: [1, 1, 1, 0.8, 0]
+  }}
+  exit={{ opacity: 0 }}
+  transition={{
+    duration: 5,
+    delay: item.delay,
+    ease: "linear"
+  }}
+>
+
     {item.type === "football" ? (
   <div className="text-5xl">⚽</div>
 ) : (
