@@ -10,6 +10,8 @@ interface MCQ {
   angryHint: string
 }
 
+
+
 const mcqs: MCQ[] = [
   {
     question: "When we went to Sweet Affairs coffee shop, Humayun ne mazak mei kya cheez order ki thi?",
