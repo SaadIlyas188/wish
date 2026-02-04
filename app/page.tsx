@@ -85,6 +85,392 @@ const messageColors = [
   "from-teal-500/20 to-cyan-500/20 border-teal-400/30",
 ]
 
+
+
+function CelebrationCard() {
+  const [cardStep, setCardStep] = useState(0)
+  const [isCardOpen, setIsCardOpen] = useState(false)
+  const [showFinale, setShowFinale] = useState(false)
+  const [isPlaying, setIsPlaying] = useState(false)
+  const audioRef = useRef<HTMLAudioElement | null>(null)
+
+  useEffect(() => {
+    if (isCardOpen && audioRef.current) {
+      audioRef.current.play()
+        .then(() => setIsPlaying(true))
+        .catch(e => console.log("Audio autoplay blocked:", e))
+    }
+  }, [isCardOpen])
+
+  const toggleMusic = () => {
+    if (audioRef.current) {
+      if (audioRef.current.paused) {
+        audioRef.current.play()
+        setIsPlaying(true)
+      } else {
+        audioRef.current.pause()
+        setIsPlaying(false)
+      }
+    }
+  }
+  const cardSteps = [
+    {
+      title: "Happy 21st Birthday Humayun 🥳",
+      message: "May you have many many more with health and emaan, Humz.",
+      bg: "from-slate-950 to-neutral-900",
+      accentFrom: "from-blue-400",
+      accentTo: "to-cyan-400"
+    },
+    {
+      title: "Best Footballer",
+      message: "I don't know much about football (😭), but I know you're the GOAT. Keep scoring those goals in life ⚽.",
+      bg: "from-neutral-900 to-stone-950",
+      accentFrom: "from-violet-400",
+      accentTo: "to-purple-400"
+    },
+    {
+      title: "AMAZING FRIEND!!!",
+      message: "Shaadi days were supposed to go boring for me, but damn bhai, those days were the most memorable days of my life. You're such a lively and fun person to be around!",
+      bg: "from-stone-950 to-zinc-900",
+      accentFrom: "from-amber-400",
+      accentTo: "to-orange-400"
+    },
+    {
+      title: "Pls meet soon",
+      message: "Mayun bhai treat kaisay lon? Mai Karachi aaon ya aap Lahore aa rahay? HAPPY HAPPY BIRTHDAYYY! 🎂🎊🎈  Enjoy the day, and issi zindagi mein aik baar dobara mil lena 😭😭😭",
+      bg: "from-zinc-900 to-neutral-950",
+      accentFrom: "from-emerald-400",
+      accentTo: "to-teal-400"
+    }
+  ]
+  
+  const currentStep = cardSteps[cardStep]
+
+  // RENDER LOGIC
+  let content
+
+  if (showFinale) {
+  content = (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      className="relative z-10 w-full min-h-screen flex items-center justify-center bg-black overflow-hidden"
+    >
+      <div className="absolute inset-0">
+        {[...Array(20)].map((_, i) => (
+          <motion.div
+            key={i}
+            className="absolute w-1 h-1 bg-white rounded-full"
+            initial={{ 
+              x: Math.random() * 100 + "%",
+              y: Math.random() * 100 + "%",
+              opacity: 0
+            }}
+            animate={{
+              opacity: [0, 0.3, 0],
+              scale: [0, 1.5, 0]
+            }}
+            transition={{
+              duration: Math.random() * 4 + 3,
+              repeat: Infinity,
+              delay: Math.random() * 5,
+              ease: "easeInOut"
+            }}
+          />
+        ))}
+      </div>
+
+      <motion.div
+        initial={{ scale: 0.9, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ duration: 1.2, ease: "easeOut" }}
+        className="text-center space-y-6 px-6"
+      >
+        <motion.h1
+          className="text-6xl md:text-8xl font-light text-white tracking-tight"
+          animate={{ 
+            opacity: [0.9, 1, 0.9]
+          }}
+          transition={{
+            duration: 3,
+            repeat: Infinity,
+            ease: "easeInOut"
+          }}
+        >
+          HUMAYUN BHAI
+        </motion.h1>
+        
+        <motion.div
+          initial={{ scaleX: 0 }}
+          animate={{ scaleX: 1 }}
+          transition={{ duration: 1, delay: 0.5 }}
+          className="h-px bg-gradient-to-r from-transparent via-white/40 to-transparent"
+        />
+        
+        <motion.p
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.8 }}
+          className="text-3xl md:text-5xl font-extralight text-white/60 tracking-widest"
+        >
+          THE GOAT
+        </motion.p>
+      </motion.div>
+
+      {/* Restart Button */}
+      <motion.button
+        initial={{ opacity: 0 }}
+        animate={{ 
+          opacity: [1, 0.7, 1]
+        }}
+        transition={{ 
+          delay: 1,
+          opacity: {
+            duration: 3,
+            repeat: Infinity,
+            ease: "easeInOut"
+          }
+        }}
+        onClick={() => window.location.reload()}
+        className="fixed bottom-16 left-1/2 -translate-x-1/2 text-white/30 hover:text-white/50 text-xs font-light tracking-widest transition-colors"
+      >
+        RESTART
+      </motion.button>
+
+      {/* Music Toggle Button */}
+      <motion.button
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1.2 }}
+        onClick={toggleMusic}
+        className="fixed bottom-8 left-1/2 -translate-x-1/2 text-white/30 hover:text-white/50 text-xs font-light tracking-widest transition-colors"
+      >
+        {isPlaying ? "PAUSE MUSIC" : "PLAY MUSIC"}
+      </motion.button>
+    </motion.div>
+  )
+}
+ else if (!isCardOpen) {
+    content = (
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="relative z-10 w-full min-h-screen flex items-center justify-center p-6 bg-black"
+      >
+        <motion.button
+          onClick={() => setIsCardOpen(true)}
+          className="relative group"
+          initial={{ scale: 0.95, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ duration: 0.8 }}
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+        >
+          <div className="relative w-80 h-[480px] rounded-3xl overflow-hidden">
+            <motion.div
+              className="absolute inset-0 bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 opacity-60"
+              animate={{
+                rotate: [0, 360]
+              }}
+              transition={{
+                duration: 8,
+                repeat: Infinity,
+                ease: "linear"
+              }}
+              style={{
+                filter: "blur(20px)"
+              }}
+            />
+            
+            <div className="relative w-full h-full bg-black m-[2px] rounded-3xl flex flex-col items-center justify-center space-y-8 p-8">
+              <motion.div
+                animate={{ 
+                  y: [0, -10, 0]
+                }}
+                transition={{
+                  duration: 2,
+                  repeat: Infinity,
+                  ease: "easeInOut"
+                }}
+              >
+                <div className="w-20 h-20 rounded-full bg-gradient-to-br from-blue-400 to-purple-400 opacity-20 blur-xl" />
+              </motion.div>
+
+              <div className="text-center space-y-4">
+                <h2 className="text-4xl font-light text-white tracking-tight">
+                  For Humayun
+                </h2>
+                <p className="text-white/40 text-sm font-light tracking-wider">
+                  Tap to open
+                </p>
+              </div>
+
+              <motion.div
+                animate={{ opacity: [0.3, 0.6, 0.3] }}
+                transition={{
+                  duration: 2,
+                  repeat: Infinity,
+                  ease: "easeInOut"
+                }}
+                className="absolute bottom-8 w-12 h-[1px] bg-white/30"
+              />
+            </div>
+          </div>
+        </motion.button>
+      </motion.div>
+    )
+  } else {
+    content = (
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        className={`relative z-10 w-full min-h-screen flex items-center justify-center p-6 bg-gradient-to-br ${currentStep.bg} transition-all duration-1000`}
+      >
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          {[...Array(15)].map((_, i) => (
+            <motion.div
+              key={i}
+              className={`absolute w-px h-px bg-gradient-to-r ${currentStep.accentFrom} ${currentStep.accentTo} rounded-full`}
+              initial={{ 
+                x: Math.random() * 100 + "%",
+                y: Math.random() * 100 + "%",
+                opacity: 0
+              }}
+              animate={{
+                opacity: [0, 0.4, 0],
+                scale: [0, 2, 0]
+              }}
+              transition={{
+                duration: Math.random() * 5 + 4,
+                repeat: Infinity,
+                delay: Math.random() * 3,
+                ease: "easeInOut"
+              }}
+            />
+          ))}
+        </div>
+
+        <motion.div
+          key={cardStep}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          className="relative w-full max-w-md space-y-12"
+        >
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.3 }}
+            className="text-center"
+          >
+            <div className={`inline-block text-sm font-light bg-gradient-to-r ${currentStep.accentFrom} ${currentStep.accentTo} bg-clip-text text-transparent tracking-widest`}>
+              {String(cardStep + 1).padStart(2, '0')} / {String(cardSteps.length).padStart(2, '0')}
+            </div>
+          </motion.div>
+
+          <motion.h1
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5 }}
+            className="text-4xl md:text-5xl font-light text-white text-center tracking-tight leading-tight"
+          >
+            {currentStep.title}
+          </motion.h1>
+
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.7 }}
+            className="text-white/50 text-lg md:text-xl font-light text-center leading-relaxed tracking-wide px-4"
+          >
+            {currentStep.message}
+          </motion.p>
+
+          {cardStep === 0 && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.9, type: "spring" }}
+              className="flex justify-center"
+            >
+              <div className={`bg-gradient-to-r ${currentStep.accentFrom} ${currentStep.accentTo} bg-clip-text text-transparent text-6xl font-extralight tracking-wider`}>
+                21
+              </div>
+            </motion.div>
+          )}
+
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1 }}
+            className="w-full h-[1px] bg-white/10 relative overflow-hidden"
+          >
+            <motion.div
+              className={`absolute inset-y-0 left-0 bg-gradient-to-r ${currentStep.accentFrom} ${currentStep.accentTo}`}
+              initial={{ width: "0%" }}
+              animate={{ width: `${((cardStep + 1) / cardSteps.length) * 100}%` }}
+              transition={{ duration: 0.5, ease: "easeOut" }}
+            />
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1.2 }}
+            className="flex items-center justify-between gap-4"
+          >
+            <button
+              onClick={() => setCardStep(Math.max(0, cardStep - 1))}
+              disabled={cardStep === 0}
+              className={`px-6 py-3 rounded-full text-sm font-light tracking-wider transition-all ${
+                cardStep === 0
+                  ? "text-white/20 cursor-not-allowed"
+                  : "text-white/60 hover:text-white active:scale-95"
+              }`}
+            >
+              Back
+            </button>
+
+            <button
+              onClick={() => {
+                if (cardStep < cardSteps.length - 1) {
+                  setCardStep(cardStep + 1)
+                } else {
+                  setShowFinale(true)
+                }
+              }}
+              className={`px-8 py-3 rounded-full text-sm font-light tracking-wider transition-all bg-gradient-to-r ${currentStep.accentFrom} ${currentStep.accentTo} text-white hover:opacity-90 active:scale-95`}
+            >
+              {cardStep === cardSteps.length - 1 ? "Finish" : "Continue"}
+            </button>
+          </motion.div>
+
+          <motion.button
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1.4 }}
+            onClick={toggleMusic}
+            className="w-full text-center text-white/30 hover:text-white/50 text-xs font-light tracking-widest transition-colors"
+          >
+            {isPlaying ? "PAUSE MUSIC" : "PLAY MUSIC"}
+          </motion.button>
+        </motion.div>
+      </motion.div>
+    )
+  }
+
+  return (
+    <>
+      {content}
+      {/* GLOBAL AUDIO - PERSISTS ACROSS ALL STATES */}
+      <audio ref={audioRef} src="/birthday.mp3" loop />
+    </>
+  )
+}
+
+
+
 export default function BirthdayWish() {
   const [isLocked, setIsLocked] = useState(true)
   const [timeLeft, setTimeLeft] = useState({
@@ -93,7 +479,7 @@ export default function BirthdayWish() {
     minutes: 0,
     seconds: 0
   })
-
+   const cheerAudioRef = useRef<HTMLAudioElement | null>(null)
   const [stage, setStage] = useState<"mcq" | "pinata" | "celebration">("mcq")
   const [currentMCQ, setCurrentMCQ] = useState(0)
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null)
@@ -107,7 +493,7 @@ export default function BirthdayWish() {
   const [messagePosition, setMessagePosition] = useState({ x: 50, y: 80 })
   const [messageColor, setMessageColor] = useState(0)
   const [showVerified, setShowVerified] = useState(false)
-
+  const callingAudioRef = useRef<HTMLAudioElement | null>(null)
   const [hidePivot, setHidePivot] = useState(false)
   const isSwingingRef = useRef(false)
   const currentAngleRef = useRef(0)
@@ -143,6 +529,9 @@ export default function BirthdayWish() {
     // Show verified screen instead of going directly to pinata
     setTimeout(() => {
       setShowVerified(true)
+      if (cheerAudioRef.current) {
+          cheerAudioRef.current.play().catch(e => console.log("Cheer audio blocked:", e))
+        }
     }, 400)
     
     // After 3 seconds, go to pinata
@@ -212,6 +601,9 @@ setMessageColor(Math.floor(Math.random() * messageColors.length))
     // If reached 21, do finale
     if (newHits >= 21) {
       setShowShower(true)
+      if (callingAudioRef.current) {
+    callingAudioRef.current.play().catch(e => console.log("Calling audio blocked:", e))
+  }
       setTimeout(() => setHidePivot(true), 1200) 
       isSwingingRef.current = false
       
@@ -225,14 +617,14 @@ setMessageColor(Math.floor(Math.random() * messageColors.length))
       const confettiItems = []
 // Create 1000 items - random mix of all images
 const imageTypes = ["football", "hums", "hums2", "hums3", "hums4"]
-for (let i = 0; i < 400; i++) {
+for (let i = 0; i < 500; i++) {
   confettiItems.push({
     id: i,
     type: imageTypes[i % 5],
     x: Math.random() * 100,
     y: -20,
     rotation: Math.random() * 720,
-    delay: Math.random() * 8,
+    delay: Math.random() * 6,
     scale: Math.random() * 0.4 + 0.6
   })
 }
@@ -307,7 +699,7 @@ useEffect(() => {
 
 
 // COUNTDOWN SCREEN
-if (isLocked) {
+if (!isLocked) {
   // Color swap state - toggles every 4 seconds
   const [isInverted, setIsInverted] = useState(false)
   
@@ -1037,7 +1429,7 @@ if (isLocked) {
                   Want to unlock the wish? 😼
                 </h1>
                 <p className="text-white/50 text-xs font-mono">
-                  Click the football {2 - hits} more {2 - hits === 1 ? 'time' : 'times'}!
+                  Click the football {21 - hits} more {21 - hits === 1 ? 'time' : 'times'}!
                 </p>
               </motion.div>
 
@@ -1046,7 +1438,7 @@ if (isLocked) {
                   <motion.div
                     className="absolute inset-y-0 left-0 bg-gradient-to-r from-amber-400 via-orange-500 to-red-500 rounded-full"
                     initial={{ width: "0%" }}
-                    animate={{ width: `${(hits / 2) * 100}%` }}
+                    animate={{ width: `${(hits / 21) * 100}%` }}
                     transition={{ duration: 0.5, ease: "easeOut" }}
                   />
                   <motion.div
@@ -1056,7 +1448,7 @@ if (isLocked) {
                   />
                 </div>
                 <p className="mt-2 text-xs font-bold text-amber-400/80">
-                  {hits} / 21 HITS! {Math.round((hits / 2) * 100)}%
+                  {hits} / 21 HITS! {Math.round((hits / 21) * 100)}%
                 </p>
               </div>
             </div>
@@ -1214,143 +1606,11 @@ if (isLocked) {
         )}
 
         {stage === "celebration" && (
-          <motion.div
-            key="celebration"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.8 }}
-            className="relative z-10 w-full min-h-screen flex items-center justify-center p-4"
-          >
-            {confetti.map((item) => (
-              <motion.div
-                key={item.id}
-                className="absolute text-4xl pointer-events-none"
-                initial={{ 
-                  x: "50vw", 
-                  y: "30vh", 
-                  opacity: 0, 
-                  scale: 0 
-                }}
-                animate={{
-                  x: `${item.x}vw`,
-                  y: "110vh",
-                  rotate: item.rotation,
-                  opacity: [0, 1, 1, 0.7, 0],
-                  scale: [0, item.scale * 1.2, item.scale, item.scale * 0.8]
-                }}
-                transition={{
-                  duration: 5,
-                  delay: item.delay,
-                  ease: [0.25, 0.46, 0.45, 0.94]
-                }}
-              >
-                {item.type}
-              </motion.div>
-            ))}
-
-            <motion.div
-              className="relative w-full"
-              initial={{ scale: 0.8, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ duration: 0.7, delay: 0.3 }}
-            >
-              <div className="relative backdrop-blur-xl bg-gradient-to-br from-white/[0.06] to-white/[0.02] border border-white/[0.12] rounded-2xl p-6 shadow-2xl">
-                <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-amber-400/50 to-transparent" />
-                <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-orange-400/50 to-transparent" />
-
-                <div className="text-center space-y-6">
-                  <motion.div
-                    initial={{ opacity: 0, y: 30 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.6, duration: 0.6 }}
-                  >
-                    <motion.h1 
-                      className="text-4xl font-bold tracking-tight mb-3 bg-gradient-to-br from-amber-200 via-amber-400 to-orange-500 bg-clip-text text-transparent"
-                      animate={{ 
-                        textShadow: [
-                          "0 0 20px rgba(251, 191, 36, 0)",
-                          "0 0 40px rgba(251, 191, 36, 0.3)",
-                          "0 0 20px rgba(251, 191, 36, 0)"
-                        ]
-                      }}
-                      transition={{ duration: 2, repeat: Infinity }}
-                    >
-                      HAPPY 21ST
-                    </motion.h1>
-                    <h2 className="text-2xl font-bold text-white/95 tracking-wide">
-                      BIRTHDAY, JOHN! 🎉
-                    </h2>
-                  </motion.div>
-
-                  <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 1, duration: 0.6 }}
-                    className="space-y-4"
-                  >
-                    <p className="text-lg text-amber-400/90 font-semibold">
-                      Welcome to the most EPIC year of your life!
-                    </p>
-
-                    <p className="text-sm text-white/70 font-light leading-relaxed">
-                      Today marks the beginning of your <span className="text-amber-400/90 font-semibold">21st chapter</span> — 
-                      a year filled with <span className="text-orange-400/90 font-semibold">unforgettable adventures</span>, 
-                      incredible success, and boundless joy.
-                    </p>
-
-                    <div className="pt-2 pb-1">
-                      <p className="text-base text-white/90 font-medium italic">
-                        "May this year bring you everything you've dreamed of and more!"
-                      </p>
-                    </div>
-
-                    <p className="text-xs text-white/60">
-                      Here's to <span className="text-amber-400/90 font-semibold">21 years</span> of being absolutely 
-                      <span className="text-orange-400/90 font-semibold"> legendary</span>, and to countless more celebrations ahead!
-                    </p>
-                  </motion.div>
-
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0.5 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: 1.4, duration: 0.5 }}
-                    className="flex justify-center gap-3 text-4xl pt-4"
-                  >
-                    {["🎊", "⚽", "🎂", "🎉", "🎈"].map((emoji, i) => (
-                      <motion.span
-                        key={i}
-                        animate={{ 
-                          y: [0, -10, 0],
-                          rotate: [0, 10, -10, 0]
-                        }}
-                        transition={{
-                          duration: 2.5,
-                          repeat: Infinity,
-                          delay: i * 0.2,
-                          ease: "easeInOut"
-                        }}
-                      >
-                        {emoji}
-                      </motion.span>
-                    ))}
-                  </motion.div>
-
-                  <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 1.8 }}
-                    className="pt-2"
-                  >
-                    <p className="text-xs text-white/40 font-light">
-                      Cheers to an incredible birthday and an even more incredible year ahead! 🥂
-                    </p>
-                  </motion.div>
-                </div>
-              </div>
-            </motion.div>
-          </motion.div>
+          <CelebrationCard />
         )}
       </AnimatePresence>
+      <audio ref={cheerAudioRef} src="/cheer.mp3" />
+      <audio ref={callingAudioRef} src="/calling.mp3" /> 
     </div>
   )
 }
