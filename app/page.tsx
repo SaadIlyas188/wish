@@ -61,7 +61,6 @@ const hitMessages = [
   "HIT.THE.BALL.",
   "GO MAYUN GO!",
   "Honay wala hai bas",
-  "The grand finale is near! Don't stop!",
   "Bas almost ho gaya",
   "💪💪💪💪💪💪",
   "SO CLOSE!",
@@ -70,6 +69,7 @@ const hitMessages = [
   "Acha aik aur....",
   "C'mom aik aurrrrrr",
   "PROMISE YE LAST HAI 🥹",
+  "Ho gayaaaaaaa!"
 ]
 
 const messageColors = [
@@ -212,14 +212,14 @@ setMessageColor(Math.floor(Math.random() * messageColors.length))
       const confettiItems = []
 // Create 1000 items - random mix of all images
 const imageTypes = ["football", "hums", "hums2", "hums3", "hums4"]
-for (let i = 0; i < 700; i++) {
+for (let i = 0; i < 600; i++) {
   confettiItems.push({
     id: i,
     type: imageTypes[i % 5],
     x: Math.random() * 100,
     y: -20,
     rotation: Math.random() * 720,
-    delay: Math.random() * 6,
+    delay: Math.random() * 8,
     scale: Math.random() * 0.4 + 0.6
   })
 }
