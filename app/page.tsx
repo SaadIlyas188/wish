@@ -278,7 +278,7 @@ for (let i = 0; i < 400; i++) {
   }
 // COUNTDOWN TIMER
 useEffect(() => {
-  const targetDate = new Date('2026-02-08T00:00:00').getTime()
+  const targetDate = new Date('2026-02-06T00:00:00').getTime()
   
   const updateCountdown = () => {
     const now = new Date().getTime()
@@ -465,7 +465,7 @@ if (isLocked) {
             animate={{ color: isInverted ? '#f9fafb' : '#111827' }}
             transition={{ duration: 1, ease: "easeInOut" }}
           >
-            Wait for 8th Feb
+            Wait for 6th Feb
           </motion.h1>
           <motion.p 
             className="text-base font-normal"
