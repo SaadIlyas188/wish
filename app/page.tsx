@@ -2,6 +2,8 @@
 
 import { useEffect, useState, useRef } from "react"
 import { motion, useAnimation, AnimatePresence } from "framer-motion"
+import React, { useMemo } from 'react'
+
 
 interface MCQ {
   question: string
@@ -84,6 +86,14 @@ const messageColors = [
 ]
 
 export default function BirthdayWish() {
+  const [isLocked, setIsLocked] = useState(true)
+  const [timeLeft, setTimeLeft] = useState({
+    days: 0,
+    hours: 0,
+    minutes: 0,
+    seconds: 0
+  })
+
   const [stage, setStage] = useState<"mcq" | "pinata" | "celebration">("mcq")
   const [currentMCQ, setCurrentMCQ] = useState(0)
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null)
@@ -111,6 +121,9 @@ export default function BirthdayWish() {
       setStage("pinata")
     }
   }, [])
+
+
+
 
   const handleAnswerSelect = (index: number) => {
     setSelectedAnswer(index)
@@ -212,7 +225,7 @@ setMessageColor(Math.floor(Math.random() * messageColors.length))
       const confettiItems = []
 // Create 1000 items - random mix of all images
 const imageTypes = ["football", "hums", "hums2", "hums3", "hums4"]
-for (let i = 0; i < 600; i++) {
+for (let i = 0; i < 400; i++) {
   confettiItems.push({
     id: i,
     type: imageTypes[i % 5],
@@ -263,6 +276,398 @@ for (let i = 0; i < 600; i++) {
 
     swingBack()
   }
+// COUNTDOWN TIMER
+useEffect(() => {
+  const targetDate = new Date('2026-02-08T00:00:00').getTime()
+  
+  const updateCountdown = () => {
+    const now = new Date().getTime()
+    const difference = targetDate - now
+
+    if (difference <= 0) {
+      setIsLocked(false)
+      return
+    }
+
+    setTimeLeft({
+      days: Math.floor(difference / (1000 * 60 * 60 * 24)),
+      hours: Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
+      minutes: Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60)),
+      seconds: Math.floor((difference % (1000 * 60)) / 1000)
+    })
+  }
+
+  updateCountdown()
+  const interval = setInterval(updateCountdown, 1000)
+
+  return () => clearInterval(interval)
+}, [])
+
+
+
+
+// COUNTDOWN SCREEN
+if (isLocked) {
+  // Color swap state - toggles every 4 seconds
+  const [isInverted, setIsInverted] = useState(false)
+  
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setIsInverted(prev => !prev)
+    }, 8000)
+    return () => clearInterval(interval)
+  }, [])
+
+  // Generate confetti config ONCE outside render
+  const confettiConfig = useMemo(() => {
+    const colors = [
+      'rgba(251, 146, 60, 0.7)',
+      'rgba(139, 92, 246, 0.7)',
+      'rgba(59, 130, 246, 0.7)',
+      'rgba(236, 72, 153, 0.7)',
+      'rgba(34, 197, 94, 0.7)',
+      'rgba(234, 179, 8, 0.7)'
+    ]
+    
+    const shapes = ['rotate-45', 'rotate-0', '-rotate-45', 'rounded-full']
+    
+    return [...Array(60)].map((_, i) => {
+      const randomShape = shapes[Math.floor(Math.random() * shapes.length)]
+      const duration = Math.random() * 2 + 4
+      const delay = (i * 0.08) % duration
+      
+      return {
+        id: i,
+        shape: randomShape,
+        width: Math.random() * 10 + 5,
+        height: randomShape === 'rounded-full' ? Math.random() * 10 + 5 : Math.random() * 14 + 6,
+        color: colors[i % colors.length],
+        left: `${(Math.random() * 100)}%`,
+        startY: -20 - Math.random() * 20,
+        endY: 120,
+        xMove: (Math.random() - 0.5) * 100,
+        rotation: Math.random() * 720 - 360,
+        duration,
+        delay
+      }
+    })
+  }, [])
+
+  return (
+    <motion.div 
+      className="min-h-screen flex items-center justify-center overflow-hidden relative"
+      animate={{
+        background: isInverted 
+          ? '#000000'
+          : 'linear-gradient(to bottom, #f9fafb, #ffffff)'
+      }}
+      transition={{ duration: 1, ease: "easeInOut" }}
+    >
+      {/* Continuous Confetti Shower */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        {confettiConfig.map((conf) => (
+          <motion.div
+            key={conf.id}
+            className={`absolute ${conf.shape}`}
+            style={{
+              width: conf.width,
+              height: conf.height,
+              backgroundColor: conf.color,
+              left: conf.left,
+              top: `${conf.startY}%`
+            }}
+            animate={{
+              y: [`${conf.startY}vh`, `${conf.endY}vh`],
+              x: [0, conf.xMove],
+              rotate: [0, conf.rotation],
+              opacity: [0, 1, 1, 1, 0.7, 0]
+            }}
+            transition={{
+              duration: conf.duration,
+              repeat: Infinity,
+              delay: conf.delay,
+              ease: "linear",
+              repeatDelay: 0
+            }}
+          />
+        ))}
+      </div>
+
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 1, ease: "easeOut" }}
+        className="relative z-10 text-center space-y-12 px-6 max-w-md"
+      >
+        {/* Profile Image Circle */}
+        <motion.div
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          transition={{ delay: 0.3, type: "spring", stiffness: 200 }}
+          className="mx-auto relative"
+        >
+          <div className="w-32 h-32 rounded-full bg-gray-100 mx-auto flex items-center justify-center relative overflow-hidden">
+            <img 
+              src="/hums.jpeg" 
+              alt="Profile"
+              className="w-full h-full object-cover"
+            />
+            <svg className="absolute -inset-1 w-[calc(100%+8px)] h-[calc(100%+8px)]">
+              <motion.circle
+                cx="50%"
+                cy="50%"
+                r="63"
+                fill="none"
+                stroke="url(#gradient)"
+                strokeWidth="3"
+                strokeLinecap="round"
+                strokeDasharray="400"
+                animate={{
+                  strokeDashoffset: [0, -400],
+                  rotate: 360
+                }}
+                transition={{
+                  strokeDashoffset: {
+                    duration: 3,
+                    repeat: Infinity,
+                    ease: "linear"
+                  },
+                  rotate: {
+                    duration: 8,
+                    repeat: Infinity,
+                    ease: "linear"
+                  }
+                }}
+                style={{ transformOrigin: "center" }}
+              />
+              <defs>
+                <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="#fb923c" />
+                  <stop offset="25%" stopColor="#a855f7" />
+                  <stop offset="50%" stopColor="#3b82f6" />
+                  <stop offset="75%" stopColor="#ec4899" />
+                  <stop offset="100%" stopColor="#fb923c" />
+                </linearGradient>
+              </defs>
+            </svg>
+          </div>
+        </motion.div>
+
+        {/* Message */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.6 }}
+          className="space-y-3"
+        >
+          <motion.h1 
+            className="text-3xl font-semibold tracking-tight"
+            animate={{ color: isInverted ? '#f9fafb' : '#111827' }}
+            transition={{ duration: 1, ease: "easeInOut" }}
+          >
+            Wait for 8th Feb
+          </motion.h1>
+          <motion.p 
+            className="text-base font-normal"
+            animate={{ color: isInverted ? '#9ca3af' : '#6b7280' }}
+            transition={{ duration: 1, ease: "easeInOut" }}
+          >
+            you dumb potato 😾🥔
+          </motion.p>
+        </motion.div>
+
+        {/* Clean Minimal Countdown */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.9 }}
+          className="space-y-6"
+        >
+          {/* Countdown Display */}
+          <motion.div 
+            className="rounded-3xl px-10 py-5 shadow-2xl backdrop-blur-sm"
+            animate={{ 
+              backgroundColor: isInverted ? 'rgba(255, 255, 255, 0.95)' : 'rgba(0, 0, 0, 0.95)'
+            }}
+            transition={{ duration: 1, ease: "easeInOut" }}
+          >
+            <div className="flex items-center justify-center gap-3">
+              {/* Days */}
+              <div className="flex flex-col items-center">
+                <div className="flex gap-0.5">
+                  {String(timeLeft.days).padStart(2, '0').split('').map((digit, i) => (
+                    <motion.div
+                      key={`day-${i}-${digit}`}
+                      initial={{ scale: 0.8, opacity: 0 }}
+                      animate={{ 
+                        scale: 1, 
+                        opacity: 1,
+                        color: isInverted ? '#000000' : '#ffffff'
+                      }}
+                      transition={{ duration: 0.3, color: { duration: 1, ease: "easeInOut" } }}
+                      className="text-5xl font-black tracking-tight"
+                      style={{
+                        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+                        letterSpacing: '-0.05em'
+                      }}
+                    >
+                      {digit}
+                    </motion.div>
+                  ))}
+                </div>
+                <motion.div 
+                  className="text-xs uppercase tracking-widest mt-2 font-medium"
+                  animate={{ color: isInverted ? 'rgba(0, 0, 0, 0.4)' : 'rgba(255, 255, 255, 0.4)' }}
+                  transition={{ duration: 1, ease: "easeInOut" }}
+                >
+                  Days
+                </motion.div>
+              </div>
+
+              {/* Colon */}
+              <motion.div 
+                className="text-4xl font-bold px-1 pb-6"
+                animate={{ color: isInverted ? 'rgba(0, 0, 0, 0.5)' : 'rgba(255, 255, 255, 0.5)' }}
+                transition={{ duration: 1, ease: "easeInOut" }}
+              >
+                :
+              </motion.div>
+
+              {/* Hours */}
+              <div className="flex flex-col items-center">
+                <div className="flex gap-0.5">
+                  {String(timeLeft.hours).padStart(2, '0').split('').map((digit, i) => (
+                    <motion.div
+                      key={`hour-${i}-${digit}`}
+                      initial={{ scale: 0.8, opacity: 0 }}
+                      animate={{ 
+                        scale: 1, 
+                        opacity: 1,
+                        color: isInverted ? '#000000' : '#ffffff'
+                      }}
+                      transition={{ duration: 0.3, color: { duration: 1, ease: "easeInOut" } }}
+                      className="text-5xl font-black tracking-tight"
+                      style={{
+                        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+                        letterSpacing: '-0.05em'
+                      }}
+                    >
+                      {digit}
+                    </motion.div>
+                  ))}
+                </div>
+                <motion.div 
+                  className="text-xs uppercase tracking-widest mt-2 font-medium"
+                  animate={{ color: isInverted ? 'rgba(0, 0, 0, 0.4)' : 'rgba(255, 255, 255, 0.4)' }}
+                  transition={{ duration: 1, ease: "easeInOut" }}
+                >
+                  Hours
+                </motion.div>
+              </div>
+
+              {/* Colon */}
+              <motion.div 
+                className="text-4xl font-bold px-1 pb-6"
+                animate={{ color: isInverted ? 'rgba(0, 0, 0, 0.5)' : 'rgba(255, 255, 255, 0.5)' }}
+                transition={{ duration: 1, ease: "easeInOut" }}
+              >
+                :
+              </motion.div>
+
+              {/* Minutes */}
+              <div className="flex flex-col items-center">
+                <div className="flex gap-0.5">
+                  {String(timeLeft.minutes).padStart(2, '0').split('').map((digit, i) => (
+                    <motion.div
+                      key={`min-${i}-${digit}`}
+                      initial={{ scale: 0.8, opacity: 0 }}
+                      animate={{ 
+                        scale: 1, 
+                        opacity: 1,
+                        color: isInverted ? '#000000' : '#ffffff'
+                      }}
+                      transition={{ duration: 0.3, color: { duration: 1, ease: "easeInOut" } }}
+                      className="text-5xl font-black tracking-tight"
+                      style={{
+                        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+                        letterSpacing: '-0.05em'
+                      }}
+                    >
+                      {digit}
+                    </motion.div>
+                  ))}
+                </div>
+                <motion.div 
+                  className="text-xs uppercase tracking-widest mt-2 font-medium"
+                  animate={{ color: isInverted ? 'rgba(0, 0, 0, 0.4)' : 'rgba(255, 255, 255, 0.4)' }}
+                  transition={{ duration: 1, ease: "easeInOut" }}
+                >
+                  Minutes
+                </motion.div>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Progress Bar with Football */}
+          <div className="relative w-full max-w-sm mx-auto pt-2">
+            <motion.div 
+              className="h-2 rounded-full overflow-hidden"
+              animate={{ backgroundColor: isInverted ? '#1f2937' : '#e5e7eb' }}
+              transition={{ duration: 1, ease: "easeInOut" }}
+            >
+              <motion.div
+                className="h-full"
+                animate={{ backgroundColor: isInverted ? '#ffffff' : '#000000' }}
+                style={{ 
+                  width: `${((60 - timeLeft.seconds) / 60) * 100}%`
+                }}
+                transition={{ width: { duration: 0.3 }, backgroundColor: { duration: 1, ease: "easeInOut" } }}
+              />
+            </motion.div>
+            {/* Football emoji on progress bar */}
+            <motion.div
+              className="absolute -top-1 text-2xl"
+              style={{
+                left: `calc(${((60 - timeLeft.seconds) / 60) * 100}% - 12px)`
+              }}
+              transition={{ duration: 0.3 }}
+            >
+              ⚽
+            </motion.div>
+          </div>
+
+          {/* Seconds Display */}
+          <motion.div
+            key={timeLeft.seconds}
+            initial={{ scale: 1.1 }}
+            animate={{ 
+              scale: 1,
+              color: isInverted ? '#6b7280' : '#9ca3af'
+            }}
+            transition={{ duration: 0.2, color: { duration: 1, ease: "easeInOut" } }}
+            className="text-lg font-medium"
+          >
+            {String(timeLeft.seconds).padStart(2, '0')} seconds
+          </motion.div>
+        </motion.div>
+
+        {/* Status text */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ 
+            opacity: 1,
+            color: isInverted ? '#9ca3af' : '#9ca3af'
+          }}
+          transition={{ delay: 1.2, color: { duration: 1, ease: "easeInOut" } }}
+          className="text-sm"
+        >
+          Something special is coming...
+        </motion.div>
+      </motion.div>
+    </motion.div>
+  )
+}
+
 
   return (
     <div className="min-h-screen bg-[#0B0B0F] flex items-center justify-center overflow-hidden relative">
