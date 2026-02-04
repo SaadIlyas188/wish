@@ -699,7 +699,7 @@ useEffect(() => {
 
 
 // COUNTDOWN SCREEN
-if (!isLocked) {
+if (isLocked) {
   // Color swap state - toggles every 4 seconds
   const [isInverted, setIsInverted] = useState(false)
   
