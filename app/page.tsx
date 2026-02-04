@@ -212,7 +212,7 @@ setMessageColor(Math.floor(Math.random() * messageColors.length))
       const confettiItems = []
 // Create 1000 items - random mix of all images
 const imageTypes = ["football", "hums", "hums2", "hums3", "hums4"]
-for (let i = 0; i < 1000; i++) {
+for (let i = 0; i < 700; i++) {
   confettiItems.push({
     id: i,
     type: imageTypes[i % 5],
@@ -661,7 +661,7 @@ for (let i = 0; i < 1000; i++) {
 <div className="flex-1 relative">
   {/* Pivot point at top center - IMAGE */}
   {!hidePivot && (
-  <div className="absolute left-1/2 -translate-x-1/2 z-20" style={{ top: "10vh" }}>
+  <div className="absolute left-1/2 -translate-x-1/2 z-20" style={{ top: "5vh" }}>
     <img 
       src="/hums.jpeg" 
       alt="Pivot" 
@@ -675,7 +675,7 @@ for (let i = 0; i < 1000; i++) {
     className="absolute left-1/2"
     style={{
       transformOrigin: "top center",
-      top: "10vh",
+      top: "5vh",
       marginLeft: "-1px"
     }}
   >
