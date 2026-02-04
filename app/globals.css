@@ -1,0 +1,152 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --stadium-dark: #0a1118;
+  --stadium-blue: #1e3a5f;
+  --gold: #ffd700;
+  --balloon-red: #ff4757;
+  --balloon-blue: #5f27cd;
+  --balloon-green: #00d2d3;
+  --balloon-pink: #ff6b9d;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: linear-gradient(180deg, #0a1118 0%, #1e3a5f 50%, #0a1118 100%);
+  color: white;
+  font-family: var(--font-inter);
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+.font-bebas {
+  font-family: var(--font-bebas);
+  letter-spacing: 0.05em;
+}
+
+/* Smooth entrance */
+@keyframes grandEntrance {
+  from {
+    opacity: 0;
+    transform: scale(0.9) translateY(50px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.grand-entrance {
+  animation: grandEntrance 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Mega spotlight */
+.mega-spotlight {
+  position: relative;
+}
+
+.mega-spotlight::before {
+  content: "";
+  position: absolute;
+  top: -100%;
+  left: 50%;
+  width: 300%;
+  height: 300%;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(255, 215, 0, 0.2) 0%,
+    rgba(255, 215, 0, 0.05) 40%,
+    transparent 70%
+  );
+  transform: translateX(-50%);
+  pointer-events: none;
+  animation: pulse 4s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+/* Gold text shine */
+.gold-shine {
+  background: linear-gradient(
+    120deg,
+    #ffd700 0%,
+    #ffed4e 40%,
+    #ffd700 60%,
+    #ffed4e 100%
+  );
+  background-size: 300% 100%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shine 4s linear infinite;
+}
+
+@keyframes shine {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 300% 50%; }
+}
+
+/* Balloon float */
+@keyframes balloonFloat {
+  0%, 100% {
+    transform: translateY(0) rotate(-5deg);
+  }
+  50% {
+    transform: translateY(-30px) rotate(5deg);
+  }
+}
+
+.balloon-float {
+  animation: balloonFloat 6s ease-in-out infinite;
+}
+
+/* Stadium confetti */
+@keyframes confettiFall {
+  0% {
+    transform: translateY(-100vh) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100vh) rotate(720deg);
+    opacity: 0;
+  }
+}
+
+/* Glow effect */
+.glow-gold {
+  box-shadow: 0 0 40px rgba(255, 215, 0, 0.6),
+              0 0 80px rgba(255, 215, 0, 0.3);
+}
+
+.glow-white {
+  box-shadow: 0 0 30px rgba(255, 255, 255, 0.5);
+}
+
+/* Card reveal */
+@keyframes cardReveal {
+  from {
+    opacity: 0;
+    transform: translateY(40px) rotateX(-10deg);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) rotateX(0);
+  }
+}
+
+.card-reveal {
+  animation: cardReveal 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
